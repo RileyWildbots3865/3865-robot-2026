@@ -1,0 +1,5 @@
+Hello
+dont delete other folders hold valuble info
+its to mkae sure info no messed up for latter incase github fails 
+
+0/1/1.4123/63.115.4/0
