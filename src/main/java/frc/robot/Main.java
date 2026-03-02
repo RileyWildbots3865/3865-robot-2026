@@ -24,10 +24,7 @@ public final class Main
    */
   public static void main(String... args)
   {
-    if (new java.io.File(Constants.OperatorConstants.safetyOne).exists()){
-      if (new java.io.File(Constants.OperatorConstants.safetyTwo).exists()){
+    
         RobotBase.startRobot(Robot::new);
-      }
-    }
   }
 }
