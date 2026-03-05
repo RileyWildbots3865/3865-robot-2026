@@ -16,12 +16,12 @@
   },
   "encoder": {
     "type": "cancoder",
-    "id": 4,
+    "id": 34,
     "canbus": null
   },
   "inverted": {
     "drive": false,
-    "angle": false
+    "angle": true
   },
   "absoluteEncoderInverted": false
 }

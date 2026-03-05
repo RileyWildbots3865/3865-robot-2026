@@ -71,8 +71,8 @@ public class RobotContainer
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
    */
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                () -> DriverOne.getLeftY() * -1,
-                                                                () -> DriverOne.getLeftX() * -1)
+                                                                () -> .25 * -1,
+                                                                () -> 0 * -1)
                                                             .withControllerRotationAxis(DriverOne::getRightX)
                                                             .deadband(OperatorConstants.DEADBAND)
                                                             .scaleTranslation(0.8)
@@ -126,6 +126,7 @@ public class RobotContainer
   public RobotContainer()
   {
     // Configure the trigger bindings
+    System.out.println("Testing 722433254543243524532");
     configureBindings();
     configureDriverTwo();
     DriverStation.silenceJoystickConnectionWarning(true);
