@@ -37,6 +37,9 @@
             "backright": {
               "open": true
             },
+            "frontleft": {
+              "open": true
+            },
             "open": true
           },
           "open": true
