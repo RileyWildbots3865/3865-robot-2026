@@ -71,9 +71,9 @@ public class RobotContainer
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
    */
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                () -> /*DriverOne.getLeftY()*/0.06 * -1,
-                                                                () -> /*DriverOne.getLeftX()*/0 * -1)
-                                                            .withControllerRotationAxis(DriverOne::getRightX)
+                                                                () -> DriverOne.getLeftY() * -1,
+                                                                () -> DriverOne.getLeftX() * -1)
+                                                            .withControllerRotationAxis(() -> DriverOne.getRightX() * -1)
                                                             .deadband(OperatorConstants.DEADBAND)
                                                             .scaleTranslation(0.8)
                                                             .allianceRelativeControl(true);
@@ -125,6 +125,7 @@ public class RobotContainer
    */
   public RobotContainer()
   {
+    
     // Configure the trigger bindings
     System.out.println("Testing 722433254543243524532");
     configureBindings();
@@ -156,6 +157,7 @@ public class RobotContainer
    */
   private void configureBindings()
   {
+    DriverOne.PS().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
     Command driveFieldOrientedDirectAngle      = drivebase.driveFieldOriented(driveDirectAngle);
     Command driveFieldOrientedAnglularVelocity = drivebase.driveFieldOriented(driveAngularVelocity);
     Command driveRobotOrientedAngularVelocity  = drivebase.driveFieldOriented(driveRobotOriented);
@@ -190,7 +192,7 @@ public class RobotContainer
                                                                      new Constraints(Units.degreesToRadians(360),
                                                                                      Units.degreesToRadians(180))
                                            ));
-    //   driverXbox.start().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
+       DriverOne.PS().onTrue(Commands.runOnce(() -> drivebase.resetOdometry(new Pose2d(3, 3, new Rotation2d()))));
     //   driverXbox.button(1).whileTrue(drivebase.sysIdDriveMotorCommand());
     //   driverXbox.button(2).whileTrue(Commands.runEnd(() -> driveDirectAngleKeyboard.driveToPoseEnabled(true),
     //                                                  () -> driveDirectAngleKeyboard.driveToPoseEnabled(false)));

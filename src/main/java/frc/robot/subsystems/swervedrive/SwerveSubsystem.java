@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import java.io.File;
@@ -113,6 +114,19 @@ public class SwerveSubsystem extends SubsystemBase
   @Override
   public void periodic()
   {
+    try
+    {
+      // Publish module states to SmartDashboard for quick diagnostics.
+      var states = swerveDrive.getStates();
+      for (int i = 0; i < states.length; i++)
+      {
+        SmartDashboard.putNumber("Module" + i + "_speed_mps", states[i].speedMetersPerSecond);
+  SmartDashboard.putNumber("Module" + i + "_angle_deg", states[i].angle.getDegrees());
+      }
+    } catch (Exception e)
+    {
+      // Don't let diagnostics crash the periodic loop; just ignore if unavailable.
+    }
   }
 
   @Override
@@ -447,35 +461,35 @@ public class SwerveSubsystem extends SubsystemBase
   public Command driveFieldOriented(Supplier<ChassisSpeeds> velocity)
   {
     return run(() -> {
-      ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-    velocity.get(),
-    getHeading()
-);
+//       ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+//     velocity.get(),
+//     getHeading()
+// );
 
-//System.out.println(speeds);
+// //System.out.println(speeds);
 
-SwerveModuleState[] s = swerveDrive.kinematics.toSwerveModuleStates(speeds);
+// SwerveModuleState[] s = swerveDrive.kinematics.toSwerveModuleStates(speeds);
 
-// Double the BackLeft wheel speed
-s[0].speedMetersPerSecond = 0; //
-s[1].speedMetersPerSecond = 0; //
-s[2].speedMetersPerSecond = 0; //
-s[3].speedMetersPerSecond = 0; //
-//s[2] - 
-//s[1] - frontright/backright/frontright-slow
-//s[0] - frontleft/back left
-//s[3] - 
+// // Double the BackLeft wheel speed
+// s[0].speedMetersPerSecond = s[0].speedMetersPerSecond; //
+// s[1].speedMetersPerSecond = s[1].speedMetersPerSecond*10; //
+// s[2].speedMetersPerSecond = s[2].speedMetersPerSecond; //
+// s[3].speedMetersPerSecond = s[3].speedMetersPerSecond; //
+// //s[2] - 
+// //s[1] - frontright/backright/frontright-slow
+// //s[0] - frontleft/back left
+// //s[3] - 
 
-swerveDrive.setModuleStates(s, false);
+// swerveDrive.setModuleStates(s, false);
 
-System.out.println("s[0] = " + s[0].speedMetersPerSecond);
-System.out.println("s[1] = " + s[1].speedMetersPerSecond);
-System.out.println("s[2] = " + s[2].speedMetersPerSecond);
-System.out.println("s[3] = " + s[3].speedMetersPerSecond);
+// System.out.println("s[0] = " + s[0].speedMetersPerSecond);
+// System.out.println("s[1] = " + s[1].speedMetersPerSecond);
+// System.out.println("s[2] = " + s[2].speedMetersPerSecond);
+// System.out.println("s[3] = " + s[3].speedMetersPerSecond);
 
 
 
-      //swerveDrive.driveFieldOriented(velocity.get());
+      swerveDrive.driveFieldOriented(velocity.get());
     });
   }
 
@@ -708,3 +722,7 @@ System.out.println("s[3] = " + s[3].speedMetersPerSecond);
     return swerveDrive;
   }
 }
+
+// Copyright (c) FIRST and other WPILib contributors.
+// Open Source Software; you can modify and/or share it under the terms of
+// the WPILib BSD license file in the root directory of this project.
