@@ -25,8 +25,8 @@ public class RobotArmSubsystem extends SubsystemBase {
         
             public RobotArmSubsystem() {
                 // ID of the motor (cámbialo por el tuyo)
-                motor1 = new SparkMax(10, MotorType.kBrushless);
-                motor2 = new SparkMax(9, MotorType.kBrushless);
+                motor1 = new SparkMax(9, MotorType.kBrushless);
+                motor2 = new SparkMax(10, MotorType.kBrushless);
                 pidController = motor1.getClosedLoopController();
                 encoder = motor1.getEncoder();
         
@@ -68,7 +68,7 @@ public class RobotArmSubsystem extends SubsystemBase {
             }
         
             public void intakeMotorRun(double speed) {
-                motor2.set(speed);
+                motor2.set(speed*-1);
             }
             // public void ArmOut(double speed){
             //     motor1.set(speed);

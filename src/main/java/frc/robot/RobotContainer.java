@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
 //import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.Constants.DrivebaseConstants;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import java.io.File;
@@ -71,9 +72,9 @@ public class RobotContainer
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
    */
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                () -> DriverOne.getLeftY() * -1,
-                                                                () -> DriverOne.getLeftX() * -1)
-                                                            .withControllerRotationAxis(() -> DriverOne.getRightX() * -1)
+                                                                () -> DriverOne.getLeftY()* 1,
+                                                                () -> DriverOne.getLeftX() * 1)
+                                                            .withControllerRotationAxis(() -> DriverOne.getRightX() + DrivebaseConstants.TURN_FIX * 1)
                                                             .deadband(OperatorConstants.DEADBAND)
                                                             .scaleTranslation(0.8)
                                                             .allianceRelativeControl(true);
