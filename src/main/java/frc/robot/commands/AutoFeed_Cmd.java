@@ -3,11 +3,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.shooterSubSystem;
 
-public class Shooter_Cmd extends Command{
+public class AutoFeed_Cmd extends Command{
     private final shooterSubSystem Shooter;
     private final double ShooterSpeed;
 
-    public Shooter_Cmd(shooterSubSystem Shooter, double ShooterSpeed){
+    public AutoFeed_Cmd(shooterSubSystem Shooter, double ShooterSpeed, double ShooterBallInSpeed){
         this.Shooter = Shooter;
         this.ShooterSpeed = ShooterSpeed;
         addRequirements(Shooter);
@@ -15,13 +15,12 @@ public class Shooter_Cmd extends Command{
 
     @Override
     public void execute(){
-        double speed = ShooterSpeed;
-        Shooter.shooterMech(speed);
+        Shooter.shooterAutoFeed(1, true);
     }
 
     @Override
     public void end(boolean interrupted){
-        Shooter.shooterMech(0.0);
+        Shooter.shooterAutoFeed(0.0, false);
     }
 
 

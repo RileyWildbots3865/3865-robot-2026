@@ -20,7 +20,7 @@ public class RobotArmSubsystem extends SubsystemBase {
             private final RelativeEncoder encoder;
             
             // Configuración
-            private final double TARGET_ANGLE = 138; // Grados a mover
+            private final double TARGET_ANGLE = 115; // Grados a mover
             public boolean isExtended = false;// Estado actual (false = en 0, true = en 90)
         
             public RobotArmSubsystem() {

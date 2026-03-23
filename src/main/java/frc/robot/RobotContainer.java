@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 //import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandPS5Controller;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 //import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.DrivebaseConstants;
@@ -32,6 +33,7 @@ import swervelib.SwerveInputStream;
 import frc.robot.commands.Intake_Cmd;
 import frc.robot.commands.Shooter_Cmd;
 import frc.robot.commands.ShooterBallsIn_Cmd;
+import frc.robot.commands.AutoFeed_Cmd;
 
 import frc.robot.subsystems.RobotArmSubsystem;
 import frc.robot.subsystems.shooterSubSystem;
@@ -53,12 +55,14 @@ public class RobotContainer
   private final Shooter_Cmd shooterLaunchCmd = new Shooter_Cmd(shooterSys, (double)Constants.ShooterSpeed);
   private final ShooterBallsIn_Cmd shooterBallsInCmd = new ShooterBallsIn_Cmd(shooterSys, (double)Constants.ShooterBallInSpeed);
 
+  private final AutoFeed_Cmd AutoFeedCmd = new AutoFeed_Cmd(shooterSys, (double)Constants.ShooterSpeed, (double)Constants.ShooterBallInSpeed);
+
   // Replace with CommandPS4Controller or CommandJoystick if needed
   // final         CommandPS5Controller driverXbox = new CommandPS5Controller(OperatorConstants.kDriverOneControllerPort);
 
   private final CommandPS5Controller DriverOne =
       new CommandPS5Controller(OperatorConstants.kDriverOneControllerPort);
-  private final CommandPS5Controller driverTwo =
+  private final CommandPS5Controller DriverTwo =
       new CommandPS5Controller(OperatorConstants.kDriverTwoControllerPort);
       
   // The robot's subsystems and commands are defined here...
@@ -72,7 +76,7 @@ public class RobotContainer
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
    */
   SwerveInputStream driveAngularVelocity = SwerveInputStream.of(drivebase.getSwerveDrive(),
-                                                                () -> DriverOne.getLeftY()* 1,
+                                                                () -> DriverOne.getLeftY() * 1,
                                                                 () -> DriverOne.getLeftX() * 1)
                                                             .withControllerRotationAxis(() -> DriverOne.getRightX() + DrivebaseConstants.TURN_FIX * 1)
                                                             .deadband(OperatorConstants.DEADBAND)
@@ -134,7 +138,10 @@ public class RobotContainer
     DriverStation.silenceJoystickConnectionWarning(true);
     
     //Create the NamedCommands that will be used in PathPlanner
+    NamedCommands.registerCommand("Shooter_Cmd", shooterLaunchCmd);
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
+
+   
 
     //Have the autoChooser pull in all PathPlanner autos as options
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -168,6 +175,15 @@ public class RobotContainer
     Command driveFieldOrientedAnglularVelocityKeyboard = drivebase.driveFieldOriented(driveAngularVelocityKeyboard);
     Command driveSetpointGenKeyboard = drivebase.driveWithSetpointGeneratorFieldRelative(
         driveDirectAngleKeyboard);
+
+    DriverOne.square().whileTrue(
+    drivebase.driveFieldOriented(
+        driveAngularVelocity.copy()
+            .withControllerRotationAxis(() -> 0) // disables manual turning
+            .withControllerHeadingAxis(() -> 0, () -> 1)
+            .headingWhile(true)
+    )
+  );
 
     if (RobotBase.isSimulation())
     {
@@ -226,20 +242,30 @@ public class RobotContainer
 
   }
 private void configureDriverTwo() {
-    driverTwo.triangle().whileTrue(IntakeOn);
-    driverTwo.triangle().whileFalse(IntakeOff);
+    DriverTwo.triangle().whileTrue(IntakeOn);
+    DriverTwo.triangle().whileFalse(IntakeOff);
 
-    // driverTwo.circle().toggleOnTrue(extendArm);
-    // driverTwo.circle().toggleOnFalse(retractArm);
+    // DriverTwo.circle().toggleOnTrue(extendArm);
+    // DriverTwo.circle().toggleOnFalse(retractArm);
 
-    driverTwo.povUp().onTrue(Commands.runOnce(()-> roboArm.togglePosition() , roboArm));
+    DriverTwo.povUp().onTrue(Commands.runOnce(()-> roboArm.togglePosition() , roboArm));
     
-    driverTwo.L2().whileTrue(Commands.runOnce(()-> shooterLaunchCmd.execute() , shooterSys));
-    driverTwo.L2().whileFalse(Commands.runOnce(()-> shooterLaunchCmd.end(true) , shooterSys));
+  // Use command-based scheduling directly instead of calling execute()/end() manually.
+  // Run the shooter flywheel while L2 is held  ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+  DriverTwo.L2().whileTrue(Commands.runOnce(()-> shooterLaunchCmd.execute(), shooterSys));
+  DriverTwo.L2().whileFalse(Commands.runOnce(()-> shooterLaunchCmd.end(true), shooterSys));
 
-    driverTwo.R2().whileTrue(Commands.runOnce(()-> shooterBallsInCmd.execute() , shooterSys));
-    driverTwo.R2().whileFalse(Commands.runOnce(()-> shooterBallsInCmd.end(true) , shooterSys));
+
+  // Run the feeder (balls in) while R2 is held
+  //-------DriverTwo.R2().whileTrue(shooterBallsInCmd);
+  DriverTwo.R2().whileTrue(Commands.runOnce(()-> shooterBallsInCmd.execute(), shooterSys));
+  DriverTwo.R2().whileFalse(Commands.runOnce(()-> shooterBallsInCmd.end(true), shooterSys));
+
+  //Runs the flywheel and when it reaches the set speed runs the feeder
+  DriverTwo.cross().whileTrue(Commands.run(()-> AutoFeedCmd.execute(), shooterSys));
+  DriverTwo.cross().whileFalse(Commands.runOnce(()-> AutoFeedCmd.end(true), shooterSys));
   }
+
 
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.

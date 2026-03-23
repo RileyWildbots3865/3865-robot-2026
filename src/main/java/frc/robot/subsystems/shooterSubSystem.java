@@ -9,6 +9,7 @@ import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 
+import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -28,8 +29,26 @@ public class shooterSubSystem extends SubsystemBase{
 
     public void shooterMech(double speed) {
         flyWheel.set(speed);
-       // feeder.set(speed);
+        
     }  
     public void shooterTakeBall(double speed) {
-        feeder.set(speed);}
+        feeder.set(speed);
+    }
+
+    public void shooterAutoFeed(double speed, boolean active) {
+        System.out.println(flyWheel.getEncoder().getVelocity());
+        if (active) {
+            flyWheel.set(speed);
+            if (flyWheel.getEncoder().getVelocity() >= 5000) {
+                feeder.set(-0.1);
+            }
+            else {
+                feeder.set(0);
+            }
+        }
+        else {
+            flyWheel.set(0);
+            feeder.set(0);
+        }
+    }
 }

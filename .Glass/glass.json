@@ -40,6 +40,9 @@
             "frontleft": {
               "open": true
             },
+            "frontright": {
+              "open": true
+            },
             "open": true
           },
           "open": true
