@@ -51,7 +51,7 @@ public final class Constants
   public static final double ShooterSpeed = 0.6;
   public static final double ShooterBallInSpeed = -0.1;
   public static final double AutoFeedRPMBar = 2300;
-  public static final double ClimbSpeed = 1.0;
+  public static final double ClimbSpeed = .2;
 }
     
 

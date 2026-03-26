@@ -52,13 +52,16 @@ public class RobotContainer
 
   private final RobotArmSubsystem roboArm = new RobotArmSubsystem();
   private final roboClimberSubsytem climberSys = new roboClimberSubsytem();
+  
   private final shooterSubSystem shooterSys = new shooterSubSystem();
   private final Intake_Cmd IntakeOn = new Intake_Cmd(roboArm,  (double)Constants.IntakeSpeed);
   private final Intake_Cmd IntakeOff = new Intake_Cmd(roboArm, 0.0);
+  
   private final Shooter_Cmd shooterLaunchCmd = new Shooter_Cmd(shooterSys, (double)Constants.ShooterSpeed);
   private final Shooter_Cmd ReverseShooterLaunchCmd = new Shooter_Cmd(shooterSys, (-1 * (Constants.ShooterSpeed)));
   private final ShooterBallsIn_Cmd shooterBallsInCmd = new ShooterBallsIn_Cmd(shooterSys, (double)Constants.ShooterBallInSpeed);
   private final ShooterBallsIn_Cmd ReverseShooterBallsInCmd = new ShooterBallsIn_Cmd(shooterSys, (-1 * (Constants.ShooterBallInSpeed)));
+  
   private final Climber_Cmd climberCmd = new Climber_Cmd(climberSys, (double)Constants.ClimbSpeed);
   private final Climber_Cmd climberCmdReverse = new Climber_Cmd(climberSys, (-1 * (Constants.ClimbSpeed)));
 
@@ -277,11 +280,11 @@ private void configureDriverTwo() {
 
   // Run the climber 
 
-  DriverTwo.povLeft().whileTrue(Commands.runOnce(()-> climberCmd.execute(), climberSys));
-  DriverTwo.povLeft().whileFalse(Commands.runOnce(()-> climberCmd.end(true), climberSys));
+  DriverOne.povLeft().whileTrue(Commands.runOnce(()-> climberCmd.execute(), climberSys));
+  DriverOne.povLeft().whileFalse(Commands.runOnce(()-> climberCmd.end(true), climberSys));
 
-  DriverTwo.povRight().whileTrue(Commands.runOnce(()-> climberCmdReverse.execute(), climberSys));
-  DriverTwo.povRight().whileFalse(Commands.runOnce(()-> climberCmdReverse.end(true), climberSys));
+  DriverOne.povRight().whileTrue(Commands.runOnce(()-> climberCmdReverse.execute(), climberSys));
+  DriverOne.povRight().whileFalse(Commands.runOnce(()-> climberCmdReverse.end(true), climberSys));
 
 
   //Runs the flywheel and when it reaches the set speed runs the feeder
