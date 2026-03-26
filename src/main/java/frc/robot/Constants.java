@@ -46,10 +46,12 @@ public final class Constants
     public static final String safetyOne = "0/00/000/0000/00000/000000/0000000.0/0.10/0.txt";
     public static final String safetyTwo = "hello.txt";
 }
-  public static final double IntakeSpeed = 0.5;
-  public static final double ArmSpeed = 0.2;
-  public static final double ShooterSpeed = 1;
+  public static final double IntakeSpeed = .5;
+  public static final double ArmSpeed = 0.275;
+  public static final double ShooterSpeed = 0.6;
   public static final double ShooterBallInSpeed = -0.1;
+  public static final double AutoFeedRPMBar = 2300;
+  public static final double ClimbSpeed = 1.0;
 }
     
 

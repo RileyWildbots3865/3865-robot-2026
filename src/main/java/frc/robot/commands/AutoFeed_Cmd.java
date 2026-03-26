@@ -15,7 +15,7 @@ public class AutoFeed_Cmd extends Command{
 
     @Override
     public void execute(){
-        Shooter.shooterAutoFeed(1, true);
+        Shooter.shooterAutoFeed(Constants.ShooterSpeed, true);
     }
 
     @Override

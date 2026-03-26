@@ -12,6 +12,7 @@ import com.revrobotics.ResetMode;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class shooterSubSystem extends SubsystemBase{
     private final SparkMax flyWheel;
@@ -35,12 +36,15 @@ public class shooterSubSystem extends SubsystemBase{
         feeder.set(speed);
     }
 
+
+    //Automatically feeds the ball into the flywheel why the flywheel reaches a certain RPM
     public void shooterAutoFeed(double speed, boolean active) {
         System.out.println(flyWheel.getEncoder().getVelocity());
         if (active) {
             flyWheel.set(speed);
-            if (flyWheel.getEncoder().getVelocity() >= 5000) {
-                feeder.set(-0.1);
+            if (flyWheel.getEncoder().getVelocity() >= Constants.AutoFeedRPMBar) {
+                feeder.set(Constants.ShooterBallInSpeed);
+                
             }
             else {
                 feeder.set(0);

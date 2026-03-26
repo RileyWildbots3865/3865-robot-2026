@@ -34,8 +34,10 @@ import frc.robot.commands.Intake_Cmd;
 import frc.robot.commands.Shooter_Cmd;
 import frc.robot.commands.ShooterBallsIn_Cmd;
 import frc.robot.commands.AutoFeed_Cmd;
+import frc.robot.commands.Climber_Cmd;
 
 import frc.robot.subsystems.RobotArmSubsystem;
+import frc.robot.subsystems.roboClimberSubsytem;
 import frc.robot.subsystems.shooterSubSystem;
 
 
@@ -49,13 +51,19 @@ public class RobotContainer
 {
 
   private final RobotArmSubsystem roboArm = new RobotArmSubsystem();
+  private final roboClimberSubsytem climberSys = new roboClimberSubsytem();
   private final shooterSubSystem shooterSys = new shooterSubSystem();
   private final Intake_Cmd IntakeOn = new Intake_Cmd(roboArm,  (double)Constants.IntakeSpeed);
   private final Intake_Cmd IntakeOff = new Intake_Cmd(roboArm, 0.0);
   private final Shooter_Cmd shooterLaunchCmd = new Shooter_Cmd(shooterSys, (double)Constants.ShooterSpeed);
+  private final Shooter_Cmd ReverseShooterLaunchCmd = new Shooter_Cmd(shooterSys, (-1 * (Constants.ShooterSpeed)));
   private final ShooterBallsIn_Cmd shooterBallsInCmd = new ShooterBallsIn_Cmd(shooterSys, (double)Constants.ShooterBallInSpeed);
+  private final ShooterBallsIn_Cmd ReverseShooterBallsInCmd = new ShooterBallsIn_Cmd(shooterSys, (-1 * (Constants.ShooterBallInSpeed)));
+  private final Climber_Cmd climberCmd = new Climber_Cmd(climberSys, (double)Constants.ClimbSpeed);
+  private final Climber_Cmd climberCmdReverse = new Climber_Cmd(climberSys, (-1 * (Constants.ClimbSpeed)));
 
   private final AutoFeed_Cmd AutoFeedCmd = new AutoFeed_Cmd(shooterSys, (double)Constants.ShooterSpeed, (double)Constants.ShooterBallInSpeed);
+
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   // final         CommandPS5Controller driverXbox = new CommandPS5Controller(OperatorConstants.kDriverOneControllerPort);
@@ -255,11 +263,26 @@ private void configureDriverTwo() {
   DriverTwo.L2().whileTrue(Commands.runOnce(()-> shooterLaunchCmd.execute(), shooterSys));
   DriverTwo.L2().whileFalse(Commands.runOnce(()-> shooterLaunchCmd.end(true), shooterSys));
 
+  DriverTwo.L1().whileTrue(Commands.runOnce(()-> ReverseShooterLaunchCmd.execute(), shooterSys));
+  DriverTwo.L1().whileFalse(Commands.runOnce(()-> ReverseShooterLaunchCmd.end(true), shooterSys));
+
 
   // Run the feeder (balls in) while R2 is held
   //-------DriverTwo.R2().whileTrue(shooterBallsInCmd);
   DriverTwo.R2().whileTrue(Commands.runOnce(()-> shooterBallsInCmd.execute(), shooterSys));
   DriverTwo.R2().whileFalse(Commands.runOnce(()-> shooterBallsInCmd.end(true), shooterSys));
+
+  DriverTwo.R1().whileTrue(Commands.runOnce(()-> ReverseShooterBallsInCmd.execute(), shooterSys));
+  DriverTwo.R1().whileFalse(Commands.runOnce(()-> ReverseShooterBallsInCmd.end(true), shooterSys));
+
+  // Run the climber 
+
+  DriverTwo.povLeft().whileTrue(Commands.runOnce(()-> climberCmd.execute(), climberSys));
+  DriverTwo.povLeft().whileFalse(Commands.runOnce(()-> climberCmd.end(true), climberSys));
+
+  DriverTwo.povRight().whileTrue(Commands.runOnce(()-> climberCmdReverse.execute(), climberSys));
+  DriverTwo.povRight().whileFalse(Commands.runOnce(()-> climberCmdReverse.end(true), climberSys));
+
 
   //Runs the flywheel and when it reaches the set speed runs the feeder
   DriverTwo.cross().whileTrue(Commands.run(()-> AutoFeedCmd.execute(), shooterSys));
