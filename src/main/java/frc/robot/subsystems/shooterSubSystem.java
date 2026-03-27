@@ -31,21 +31,10 @@ public class shooterSubSystem extends SubsystemBase{
         SparkMaxConfig flyWheelConfig = new SparkMaxConfig();
         flyWheelConfig
             .closedLoop
-            .pid(FlywheelConstants.FLYWHEEL_P, FlywheelConstants.FLYWHEEL_I, FlywheelConstants.FLYWHEEL_D)
+            .pidf(FlywheelConstants.FLYWHEEL_P, FlywheelConstants.FLYWHEEL_I, FlywheelConstants.FLYWHEEL_D, FlywheelConstants.FLYWHEEL_FF)
             .iMaxAccum(FlywheelConstants.FLYWHEEL_I_MAXACCUM)
             .iZone(FlywheelConstants.FLYWHEEL_I_ZONE)
             .allowedClosedLoopError(FlywheelConstants.FLYWHEEL_POSITION_TOLERANCE, ClosedLoopSlot.kSlot0);
-        flyWheelConfig
-            .closedLoop
-            .feedForward.sva(FlywheelConstants.FLYWHEEL_S, FlywheelConstants.FLYWHEEL_V, FlywheelConstants.FLYWHEEL_A);
-        flyWheelConfig
-            .encoder
-            .positionConversionFactor(FlywheelConstants.FLYWHEEL_GEAR_RATIO)
-            .velocityConversionFactor(FlywheelConstants.FLYWHEEL_GEAR_RATIO);
-        flyWheelConfig
-            .absoluteEncoder
-            .positionConversionFactor(FlywheelConstants.FLYWHEEL_GEAR_RATIO)
-            .velocityConversionFactor(FlywheelConstants.FLYWHEEL_GEAR_RATIO);
 
         flyWheel = new SparkMax(12, MotorType.kBrushless);
         feeder = new SparkMax(11, MotorType.kBrushless);
@@ -57,21 +46,21 @@ public class shooterSubSystem extends SubsystemBase{
         
         flyWheel.configure(flyWheelConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);
 
-        //SparkMaxPIDController m_pidcontroller = flyWheel.getPIDController();
-
     }
 
-    public void goToSetpoint(AngularVelocity velocity) {
+    public void goToSetpoint(double speed) {
+        AngularVelocity velocity = RPM.of(speed);
         if (!velocity.isEquivalent(RPM.of(0))) {
             flyWheel.getClosedLoopController().setSetpoint(velocity.in(RPM), ControlType.kVelocity);
+            // flyWheel.getClosedLoopController().setSetpoint(velocity.in(RPM), ControlType.kVelocity);
         } else {
             flyWheel.getClosedLoopController().setSetpoint(0, ControlType.kVoltage);
-
+            // flyWheel.stopMotor();
         }
     }
 
     public void shooterMech(double speed) {
-        goToSetpoint(RPM.of(speed));
+        goToSetpoint(speed);
         // flyWheel.set(speed);
         
     }  
@@ -85,7 +74,8 @@ public class shooterSubSystem extends SubsystemBase{
         
         System.out.println(flyWheel.getEncoder().getVelocity());
         if (active) {
-            flyWheel.set(speed);
+            // flyWheel.set(speed);
+            goToSetpoint(speed);
             if (flyWheel.getEncoder().getVelocity() >= Constants.AutoFeedRPMBar) {
                 feeder.set(Constants.ShooterBallInSpeed);
                 
@@ -95,7 +85,8 @@ public class shooterSubSystem extends SubsystemBase{
             }
         }
         else {
-            flyWheel.set(0);
+            // \flyWheel.set(0);
+            goToSetpoint(0);
             feeder.set(0);
         }
     }
