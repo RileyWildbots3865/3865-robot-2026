@@ -41,18 +41,17 @@ public final class Constants
   }
 
   public static class FlywheelConstants {
-    public static double FLYWHEEL_P = 0.0;
+    public static double FLYWHEEL_P = 0.0001;
     public static double FLYWHEEL_I = 0.0;
     public static double FLYWHEEL_D = 0.0;
-    public static double FLYWHEEL_S = 0.0;
-    public static double FLYWHEEL_V = 0.0;
-    public static double FLYWHEEL_A = 0.0;
+    public static double FLYWHEEL_S = 0.10996;
+    public static double FLYWHEEL_V = 0.0018;
+    public static double FLYWHEEL_A = 0.00028032;
+    public static double FLYWHEEL_RPM = 3600.0;
     public static double FLYWHEEL_I_ZONE = Units.degreesToRotations(20);
     public static double FLYWHEEL_I_MAXACCUM = Units.degreesToRotations(10) * 1000;
     public static double FLYWHEEL_POSITION_TOLERANCE = Units.degreesToRotations(0.4);
-    public static double FLYWHEEL_GEAR_RATIO = (16.0 / 115.0);
-
-    
+    public static double FLYWHEEL_GEAR_RATIO = (1.0 / 1.0);    
   }
 
  public static class OperatorConstants {

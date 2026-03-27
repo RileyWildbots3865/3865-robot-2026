@@ -1,15 +1,20 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.ControlType;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.ClosedLoopSlot;
 import com.revrobotics.spark.FeedbackSensor;
 import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.config.SparkMaxConfig;
+
+import static edu.wpi.first.units.Units.RPM;
+
 import com.revrobotics.PersistMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.ResetMode;
 
+import edu.wpi.first.units.measure.AngularVelocity;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -56,14 +61,24 @@ public class shooterSubSystem extends SubsystemBase{
 
     }
 
+    public void goToSetpoint(AngularVelocity velocity) {
+        if (!velocity.isEquivalent(RPM.of(0))) {
+            flyWheel.getClosedLoopController().setSetpoint(velocity.in(RPM), ControlType.kVelocity);
+        } else {
+            flyWheel.getClosedLoopController().setSetpoint(0, ControlType.kVoltage);
+
+        }
+    }
+
     public void shooterMech(double speed) {
-        flyWheel.set(speed);
+        goToSetpoint(RPM.of(speed));
+        // flyWheel.set(speed);
         
     }  
+
     public void shooterTakeBall(double speed) {
         feeder.set(speed);
     }
-
 
     //Automatically feeds the ball into the flywheel why the flywheel reaches a certain RPM
     public void shooterAutoFeed(double speed, boolean active) {
