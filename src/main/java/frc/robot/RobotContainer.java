@@ -262,7 +262,7 @@ private void configureDriverTwo() {
     DriverTwo.povUp().onTrue(Commands.runOnce(()-> roboArm.togglePosition() , roboArm));
     
   // Use command-based scheduling directly instead of calling execute()/end() manually.
-  // Run the shooter flywheel while L2 is held  ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+  // Run the shooter flywheel while L2 is held
   DriverTwo.L2().whileTrue(Commands.runOnce(()-> shooterLaunchCmd.execute(), shooterSys));
   DriverTwo.L2().whileFalse(Commands.runOnce(()-> shooterLaunchCmd.end(true), shooterSys));
 
@@ -271,7 +271,6 @@ private void configureDriverTwo() {
 
 
   // Run the feeder (balls in) while R2 is held
-  //-------DriverTwo.R2().whileTrue(shooterBallsInCmd);
   DriverTwo.R2().whileTrue(Commands.runOnce(()-> shooterBallsInCmd.execute(), shooterSys));
   DriverTwo.R2().whileFalse(Commands.runOnce(()-> shooterBallsInCmd.end(true), shooterSys));
 
@@ -309,3 +308,4 @@ private void configureDriverTwo() {
     drivebase.setMotorBrake(brake);
   }
 }
+//67
