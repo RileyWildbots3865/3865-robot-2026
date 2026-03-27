@@ -24,6 +24,9 @@ public class shooterSubSystem extends SubsystemBase{
         feeder = new SparkMax(11, MotorType.kBrushless);
         pidController = flyWheel.getClosedLoopController();
         encoder = flyWheel.getEncoder();
+        SparkMaxConfig config = new SparkMaxConfig();
+        config.closedLoop.pid(0.1, 0.0, 0.0);
+        flyWheel.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
 
 
     }
