@@ -279,11 +279,11 @@ private void configureDriverTwo() {
 
   // Run the climber 
 
-  DriverOne.povLeft().whileTrue(Commands.runOnce(()-> climberCmd.execute(), climberSys));
-  DriverOne.povLeft().whileFalse(Commands.runOnce(()-> climberCmd.end(true), climberSys));
+  DriverOne.povDown().whileTrue(Commands.runOnce(()-> climberCmd.execute(), climberSys));
+  DriverOne.povDown().whileFalse(Commands.runOnce(()-> climberCmd.end(true), climberSys));
 
-  DriverOne.povRight().whileTrue(Commands.runOnce(()-> climberCmdReverse.execute(), climberSys));
-  DriverOne.povRight().whileFalse(Commands.runOnce(()-> climberCmdReverse.end(true), climberSys));
+  DriverOne.povUp().whileTrue(Commands.runOnce(()-> climberCmdReverse.execute(), climberSys));
+  DriverOne.povUp().whileFalse(Commands.runOnce(()-> climberCmdReverse.end(true), climberSys));
 
 
   //Runs the flywheel and when it reaches the set speed runs the feeder
@@ -299,6 +299,7 @@ private void configureDriverTwo() {
    */
   public Command getAutonomousCommand()
   {
+
     // Pass in the selected auto from the SmartDashboard as our desired autnomous commmand 
     return autoChooser.getSelected();
   }
